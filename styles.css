@@ -1,0 +1,552 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: linear-gradient(135deg, #a8e6cf 0%, #88d8a3 50%, #7fcdcd 100%);
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 頁面樣式 */
+.page {
+    position: absolute;
+    width: 90%;
+    max-width: 800px;
+    height: 82vh;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transform: translateX(100px) scale(0.9);
+    transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+    overflow: hidden;
+    margin-bottom: 120px;
+}
+
+.page.active {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+}
+
+.page.prev {
+    transform: translateX(-100px) scale(0.9);
+}
+
+/* 封面頁樣式 */
+.cover-page {
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.cover-image-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.cover-image {
+    width: 100%;
+    height: 75%;
+    object-fit: contain;
+    object-position: center;
+    background: #f8f8f8;
+}
+
+.cover-overlay {
+    width: 100%;
+    height: 25%;
+    background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 30%, #81c784 70%, #66bb6a 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2rem;
+    z-index: 2;
+}
+
+.cover-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    animation: titleGlow 2s ease-in-out infinite alternate;
+    color: white;
+}
+
+.cover-date {
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.start-btn {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    background: linear-gradient(45deg, #66bb6a, #81c784);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(102, 187, 106, 0.4);
+    font-family: 'Noto Sans TC', sans-serif;
+}
+
+.start-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(102, 187, 106, 0.6);
+}
+
+/* 漂浮愛心動畫 */
+.floating-hearts {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.heart {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: rgba(200, 230, 201, 0.8);
+    transform: rotate(45deg);
+    animation: float 6s ease-in-out infinite;
+}
+
+.heart:before,
+.heart:after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: rgba(200, 230, 201, 0.8);
+    border-radius: 50%;
+}
+
+.heart:before {
+    top: -10px;
+    left: 0;
+}
+
+.heart:after {
+    top: 0;
+    left: -10px;
+}
+
+.heart:nth-child(1) {
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.heart:nth-child(2) {
+    left: 30%;
+    animation-delay: 1s;
+}
+
+.heart:nth-child(3) {
+    left: 50%;
+    animation-delay: 2s;
+}
+
+.heart:nth-child(4) {
+    left: 70%;
+    animation-delay: 3s;
+}
+
+.heart:nth-child(5) {
+    left: 90%;
+    animation-delay: 4s;
+}
+
+/* 一般頁面內容 */
+.page-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.page-number {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    font-size: 3rem;
+    font-weight: 300;
+    color: #66bb6a;
+    opacity: 0.5;
+    z-index: 2;
+}
+
+.image-container {
+    height: 60%;
+    position: relative;
+    overflow: hidden;
+}
+
+.page-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    background: #f8f8f8;
+    transition: transform 0.3s ease;
+}
+
+.page-image.fit-cover {
+    object-fit: cover;
+    /* 填滿容器，可能會裁切 */
+}
+
+.page-image.fit-contain {
+    object-fit: contain;
+    /* 完整顯示圖片，可能有空白 */
+}
+
+.page-image.fit-fill {
+    object-fit: fill;
+    /* 拉伸填滿，可能變形 */
+}
+
+.page:hover .page-image {
+    transform: scale(1.05);
+}
+
+.image-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.page:hover .image-overlay {
+    opacity: 1;
+}
+
+.text-content {
+    padding: 1.5rem 2rem 2.5rem 2rem;
+    height: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: linear-gradient(135deg, #f1f8e9 0%, #dcedc8 50%, #c8e6c9 100%);
+    overflow-y: auto;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.page-description {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #666;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.date-tag {
+    align-self: center;
+    padding: 8px 16px;
+    background: linear-gradient(45deg, #66bb6a, #81c784);
+    color: white;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* 生日頁面特殊樣式 */
+.birthday-page {
+    background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 50%, #a5d6a7 100%);
+}
+
+.birthday-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+}
+
+.birthday-title {
+    font-size: 3rem;
+    color: #2e7d32;
+    margin-bottom: 2rem;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+.birthday-message-box {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2rem;
+    border-radius: 20px;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.birthday-text {
+    font-size: 1.3rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.birthday-wish {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: #666;
+}
+
+.birthday-animation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.cake {
+    font-size: 4rem;
+    animation: bounce 1s ease-in-out infinite;
+}
+
+.balloons {
+    display: flex;
+    gap: 1rem;
+}
+
+.balloons span {
+    font-size: 2rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+.balloons span:nth-child(2) {
+    animation-delay: 0.5s;
+}
+
+.balloons span:nth-child(3) {
+    animation-delay: 1s;
+}
+
+/* 導航樣式 */
+.navigation {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    background: rgba(255, 255, 255, 0.25);
+    padding: 12px 20px;
+    border-radius: 50px;
+    backdrop-filter: blur(15px);
+    z-index: 1000;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.nav-btn {
+    width: 45px;
+    height: 45px;
+    border: none;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #66bb6a, #81c784);
+    color: white;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(102, 187, 106, 0.3);
+}
+
+.nav-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 10px 30px rgba(102, 187, 106, 0.4);
+}
+
+.nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.page-indicator {
+    color: white;
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+.restart-btn {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+}
+
+.restart-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+/* 動畫 */
+@keyframes titleGlow {
+    from {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    to {
+        text-shadow: 2px 2px 20px rgba(200, 230, 201, 0.8);
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(100vh) rotate(45deg);
+        opacity: 0;
+    }
+
+    10%,
+    90% {
+        opacity: 1;
+    }
+
+    50% {
+        transform: translateY(-100px) rotate(45deg);
+    }
+}
+
+@keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-10px);
+    }
+
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .page {
+        width: 95%;
+        height: 85vh;
+        margin-bottom: 100px;
+    }
+
+    .cover-title {
+        font-size: 2.5rem;
+    }
+
+    .cover-date {
+        font-size: 1.2rem;
+    }
+
+    .cover-overlay {
+        padding: 1.5rem;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+    }
+
+    .page-description {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    .text-content {
+        padding: 1rem 1.5rem 2rem 1.5rem;
+    }
+
+    .birthday-title {
+        font-size: 2rem;
+    }
+
+    .navigation {
+        bottom: 15px;
+        gap: 1rem;
+        padding: 8px 16px;
+    }
+
+    .nav-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    .restart-btn {
+        top: 20px;
+        right: 20px;
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+
+    .page-number {
+        top: 20px;
+        right: 20px;
+        font-size: 2.5rem;
+    }
+
+    .birthday-content {
+        padding: 1.5rem;
+    }
+
+    .birthday-message-box {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+}
